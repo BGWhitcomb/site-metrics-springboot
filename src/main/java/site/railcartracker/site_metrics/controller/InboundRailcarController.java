@@ -81,29 +81,29 @@ public class InboundRailcarController {
 	public ResponseEntity<InboundRailcar> updateRailcar(@PathVariable Integer inboundId,
 			@RequestBody InboundRailcar inboundRailcarDetails) {
 
-		// Step 1: Update the InboundRailcar
+		//Update the InboundRailcar
 		InboundRailcar updatedInboundRailcar = inboundRailcarService.updateInboundRailcar(inboundId,
 				inboundRailcarDetails);
 
-		// Step 2: Check if the InboundRailcar is marked as bad ordered
+		//Check if the InboundRailcar is marked as bad ordered
 		if (updatedInboundRailcar.isBadOrdered()) {
-			// Step 3: Look for an existing BadOrderedRailcar by InboundRailcar ID
+			// Look for an existing BadOrderedRailcar by InboundRailcar ID
 			System.out.println("Looking for bad order..");
 
 			BadOrderedRailcar existingBadOrder = badOrderedRailcarService.getBadOrderByInboundRailcarId(inboundId);
 
 			if (existingBadOrder != null) {
-				// Step 4: Update the existing BadOrderedRailcar
+				// Update the existing BadOrderedRailcar
 				existingBadOrder.setCarMark(updatedInboundRailcar.getCarMark());
 				existingBadOrder.setCarNumber(updatedInboundRailcar.getCarNumber());
 				existingBadOrder.setBadOrderDate(updatedInboundRailcar.getInspectedDate());
 
 				System.out.println("Bad order: " + existingBadOrder + " is updated");
 
-				// Step 5: Update the BadOrderedRailcar in the service
+				// Update the BadOrderedRailcar in the service
 				badOrderedRailcarService.updateBadOrder(existingBadOrder.getBadOrderId(), existingBadOrder);
 			} else {
-				// Step 6: Create a new BadOrderedRailcar if none exists
+				// Create a new BadOrderedRailcar if none exists
 				BadOrderedRailcar newBadOrder = new BadOrderedRailcar();
 				newBadOrder.setInboundRailcar(updatedInboundRailcar); // Set the relationship
 				newBadOrder.setCarMark(updatedInboundRailcar.getCarMark());
@@ -112,11 +112,11 @@ public class InboundRailcarController {
 
 				System.out.println("New bad order created: " + newBadOrder);
 
-				// Step 7: Save the new BadOrderedRailcar
+				// Save the new BadOrderedRailcar
 				badOrderedRailcarService.createBadOrder(newBadOrder);
 			}
 		} else {
-			// Step 8: If the InboundRailcar is no longer bad ordered, delete the associated
+			// If the InboundRailcar is no longer bad ordered, delete the associated
 			// BadOrderedRailcar
 			System.out.println("Attempting to delete bad order...");
 			badOrderedRailcarService.deleteBadOrderByInboundId(inboundId);
