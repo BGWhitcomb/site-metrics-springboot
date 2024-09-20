@@ -1,6 +1,5 @@
 package site.railcartracker.site_metrics.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import site.railcartracker.site_metrics.model.BadOrderedRailcar;
-import site.railcartracker.site_metrics.model.InboundRailcar;
 import site.railcartracker.site_metrics.service.BadOrderedRailcarService;
 import site.railcartracker.site_metrics.service.InboundRailcarService;
 
@@ -30,60 +27,51 @@ public class BadOrderedRailcarController {
 	@Autowired
 	private InboundRailcarService inboundRailcarService;
 
-//	@PostMapping
-//	public ResponseEntity<BadOrderedRailcar> createBadOrderedRailcar(@RequestBody BadOrderedRailcar badOrderedRailcar) {
-//		// Fetch the associated InboundRailcar based on the inboundId or other
-//		// identifier
-//		InboundRailcar inboundRailcar = inboundRailcarService
-//				.getInboundRailcarById(badOrderedRailcar.getInboundRailcar().getInboundId());
-//
-//		if (inboundRailcar == null) {
-//			// If inbound railcar doesn't exist, return error response
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//		}
-//
-//		// Set isBadOrdered to true for the InboundRailcar
-//		inboundRailcar.setBadOrdered(true);
-//
-//		// Link the BadOrderedRailcar to the InboundRailcar
-//		badOrderedRailcar.setInboundRailcar(inboundRailcar);
-//
-//		// Save the BadOrderedRailcar (which will also save InboundRailcar due to
-//		// cascade = ALL)
-//		BadOrderedRailcar createdBadOrder = badOrderedRailcarService.createBadOrder(badOrderedRailcar);
-//
-//		// Return a response entity with the newly created BadOrderedRailcar object
-//		return ResponseEntity.status(HttpStatus.CREATED).body(createdBadOrder);
-//	}
-
 	@GetMapping
+	public ResponseEntity<List<BadOrderedRailcar>> getActiveBadOrderedRailcars(
+			@RequestBody BadOrderedRailcar badOrderedRailcar, boolean isActive) {
+		// method for retrieving all active bad orders set to true, this is what will
+		// populate the table on page load
+		List<BadOrderedRailcar> activeBadOrders = badOrderedRailcarService
+				.getActiveBadOrders(badOrderedRailcar.isActive());
+		return ResponseEntity.status(HttpStatus.OK).body(activeBadOrders);
+	}
+
+	@GetMapping("/all")
 	public ResponseEntity<List<BadOrderedRailcar>> getAllBadOrderedRailcars(
 			@RequestBody BadOrderedRailcar badOrderedRailcar) {
+		// method for retrieving all bad orders
 		List<BadOrderedRailcar> allBadOrders = badOrderedRailcarService.getAllBadOrders();
 		return ResponseEntity.status(HttpStatus.OK).body(allBadOrders);
-		// method for retrieving all bad orders
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<BadOrderedRailcar> getBadOrderedRailcarById(@PathVariable int id) {
-		BadOrderedRailcar idOfBadOrder = badOrderedRailcarService.getBadOrderById(id);
+	@GetMapping("/{badOrderId}")
+	public ResponseEntity<BadOrderedRailcar> getBadOrderedRailcarById(@PathVariable Integer badOrderId) {
+		// method for retrieving specific bad order by id
+		BadOrderedRailcar idOfBadOrder = badOrderedRailcarService.getBadOrderById(badOrderId);
 		return ResponseEntity.status(HttpStatus.OK).body(idOfBadOrder);
-		// method for retrieving specific bad order by id? not sure if needed
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<BadOrderedRailcar> updateBadOrderedRailcar(@PathVariable int id,
+	@PutMapping("/{badOrderId}")
+	public ResponseEntity<BadOrderedRailcar> updateBadOrderedRailcar(@PathVariable Integer badOrderId,
 			@RequestBody BadOrderedRailcar badOrderedRailcarDetails) {
-		BadOrderedRailcar updatedBadOrder = badOrderedRailcarService.updateBadOrder(id, badOrderedRailcarDetails);
-		return ResponseEntity.status(HttpStatus.OK).body(updatedBadOrder);
 		// method for updating bad order entries
+		
+		// Update the BadOrderedRailcar and related InboundRailcar fields
+		BadOrderedRailcar updatedBadOrder = badOrderedRailcarService.updateBadOrderAndInboundRailcar(badOrderId,
+				badOrderedRailcarDetails);
+
+		//Return the response with the updated BadOrderedRailcar
+		return ResponseEntity.status(HttpStatus.OK).body(updatedBadOrder);
+
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteBadOrderedRailcar(@PathVariable int id) {
-		badOrderedRailcarService.deleteBadOrderByInboundId(id);
+	@DeleteMapping("/{badOrderId}")
+	public ResponseEntity<Void> deleteBadOrderedRailcar(@PathVariable Integer badOrderId) {
+		// method for deleting bad order entries, will need to add logic to delete
+		// inbound railcar simultaneously
+		badOrderedRailcarService.deleteBadOrderByInboundId(badOrderId);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-		// method for deleting bad order entries
 	}
 
 //	@GetMapping("/date-range")

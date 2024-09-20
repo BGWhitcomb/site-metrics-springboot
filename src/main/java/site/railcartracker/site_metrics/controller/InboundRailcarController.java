@@ -32,6 +32,7 @@ public class InboundRailcarController {
 
 	@PostMapping
 	public ResponseEntity<InboundRailcar> createInboundRailcar(@RequestBody InboundRailcar inboundRailcar) {
+		//need to add the below business logic to the service layer
 		// Create the InboundRailcar
 		InboundRailcar createdInboundRailcar = inboundRailcarService.createInboundRailcar(inboundRailcar);
 
@@ -80,6 +81,8 @@ public class InboundRailcarController {
 	@PutMapping("/{inboundId}")
 	public ResponseEntity<InboundRailcar> updateRailcar(@PathVariable Integer inboundId,
 			@RequestBody InboundRailcar inboundRailcarDetails) {
+		
+		//need to move all business logic to service layer and get and set field methods for updating BadOrderRailcar from this endpoint
 
 		//Update the InboundRailcar
 		InboundRailcar updatedInboundRailcar = inboundRailcarService.updateInboundRailcar(inboundId,
@@ -117,7 +120,7 @@ public class InboundRailcarController {
 			}
 		} else {
 			// If the InboundRailcar is no longer bad ordered, delete the associated
-			// BadOrderedRailcar
+			// BadOrderedRailcar, needs work
 			System.out.println("Attempting to delete bad order...");
 			badOrderedRailcarService.deleteBadOrderByInboundId(inboundId);
 		}

@@ -1,5 +1,7 @@
 package site.railcartracker.site_metrics.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +12,8 @@ public interface BadOrderedRailcarRepository extends CrudRepository<BadOrderedRa
 	//placeholder for repo method ideas, need to figure out query methods
 	
 	 BadOrderedRailcar findByInboundRailcar_InboundId(Integer inboundId);
+	 
+	 List<BadOrderedRailcar> findByIsActive(boolean isActive);
 	
 //	// Find all railcars inspected between two dates
 //	List<InboundRailcar> findByInspectedDateBetween(LocalDate startDate, LocalDate endDate);

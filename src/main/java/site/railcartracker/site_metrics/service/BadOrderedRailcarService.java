@@ -8,13 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import site.railcartracker.site_metrics.model.BadOrderedRailcar;
+import site.railcartracker.site_metrics.model.InboundRailcar;
 import site.railcartracker.site_metrics.repository.BadOrderedRailcarRepository;
+import site.railcartracker.site_metrics.repository.InboundRailcarRepository;
 
 @Service
 public class BadOrderedRailcarService {
 
 	@Autowired
 	private BadOrderedRailcarRepository badOrderedRailcarRepository;
+	
+	@Autowired
+	private InboundRailcarRepository inboundRailcarRepository;
 
 //	@Autowired
 //	private InboundRailcarRepository inboundRailcarRepository;
@@ -31,6 +36,11 @@ public class BadOrderedRailcarService {
 		Iterable<BadOrderedRailcar> allBadOrders = badOrderedRailcarRepository.findAll();
 		return (List<BadOrderedRailcar>) allBadOrders;
 
+	}
+	
+	public List<BadOrderedRailcar> getActiveBadOrders(boolean isActive) {
+		List<BadOrderedRailcar> activeBadOrders = badOrderedRailcarRepository.findByIsActive(isActive);
+		return (List<BadOrderedRailcar>) activeBadOrders;
 	}
 
 	public BadOrderedRailcar getBadOrderById(Integer id) {
@@ -61,6 +71,37 @@ public class BadOrderedRailcarService {
 			throw new EntityNotFoundException("BadOrderedRailcar not found with id: " + id);
 		}
 	}
+	
+	@Transactional
+    public BadOrderedRailcar updateBadOrderAndInboundRailcar(int badOrderId, BadOrderedRailcar badOrderedRailcarDetails) {
+
+        // Fetch the existing BadOrderedRailcar by its ID
+        BadOrderedRailcar existingBadOrder = badOrderedRailcarRepository.findById(badOrderId)
+                .orElseThrow(() -> new EntityNotFoundException("BadOrderedRailcar not found with id: " + badOrderId));
+
+        // Fetch the associated InboundRailcar
+        InboundRailcar inboundRailcar = existingBadOrder.getInboundRailcar();
+
+        if (inboundRailcar == null) {
+            throw new EntityNotFoundException("InboundRailcar not found for BadOrderedRailcar id: " + badOrderId);
+        }
+
+        // Update fields in BadOrderedRailcar
+        existingBadOrder.setCarMark(badOrderedRailcarDetails.getCarMark());
+        existingBadOrder.setCarNumber(badOrderedRailcarDetails.getCarNumber());
+        existingBadOrder.setBadOrderDate(badOrderedRailcarDetails.getBadOrderDate());
+        existingBadOrder.setBadOrderReason(badOrderedRailcarDetails.getBadOrderReason());
+        existingBadOrder.setRepairedDate(badOrderedRailcarDetails.getRepairedDate());
+
+        // Update related fields in InboundRailcar
+        inboundRailcar.setCarMark(badOrderedRailcarDetails.getCarMark());
+        inboundRailcar.setCarNumber(badOrderedRailcarDetails.getCarNumber());
+   
+
+        //Save both entities
+        inboundRailcarRepository.save(inboundRailcar);
+        return badOrderedRailcarRepository.save(existingBadOrder);
+    }
 	
 	@Transactional
 	public void deleteBadOrderByInboundId(Integer inboundId) {
