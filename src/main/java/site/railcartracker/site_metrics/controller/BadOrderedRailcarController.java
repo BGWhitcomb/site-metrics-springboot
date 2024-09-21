@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import site.railcartracker.site_metrics.model.BadOrderedRailcar;
 import site.railcartracker.site_metrics.service.BadOrderedRailcarService;
-import site.railcartracker.site_metrics.service.InboundRailcarService;
 
 @RestController
 @RequestMapping("/bad-orders")
@@ -23,9 +22,6 @@ public class BadOrderedRailcarController {
 
 	@Autowired
 	private BadOrderedRailcarService badOrderedRailcarService;
-
-	@Autowired
-	private InboundRailcarService inboundRailcarService;
 
 	@GetMapping
 	public ResponseEntity<List<BadOrderedRailcar>> getActiveBadOrderedRailcars(
@@ -48,20 +44,16 @@ public class BadOrderedRailcarController {
 	@GetMapping("/{badOrderId}")
 	public ResponseEntity<BadOrderedRailcar> getBadOrderedRailcarById(@PathVariable Integer badOrderId) {
 		// method for retrieving specific bad order by id
-		BadOrderedRailcar idOfBadOrder = badOrderedRailcarService.getBadOrderById(badOrderId);
-		return ResponseEntity.status(HttpStatus.OK).body(idOfBadOrder);
+		BadOrderedRailcar badOrderById = badOrderedRailcarService.getBadOrderById(badOrderId);
+		return ResponseEntity.status(HttpStatus.OK).body(badOrderById);
 	}
 
 	@PutMapping("/{badOrderId}")
 	public ResponseEntity<BadOrderedRailcar> updateBadOrderedRailcar(@PathVariable Integer badOrderId,
 			@RequestBody BadOrderedRailcar badOrderedRailcarDetails) {
-		// method for updating bad order entries
-		
-		// Update the BadOrderedRailcar and related InboundRailcar fields
+		// method for updating bad order entries and inspections simultaneously
 		BadOrderedRailcar updatedBadOrder = badOrderedRailcarService.updateBadOrderAndInboundRailcar(badOrderId,
 				badOrderedRailcarDetails);
-
-		//Return the response with the updated BadOrderedRailcar
 		return ResponseEntity.status(HttpStatus.OK).body(updatedBadOrder);
 
 	}

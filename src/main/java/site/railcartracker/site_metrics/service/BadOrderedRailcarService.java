@@ -20,12 +20,7 @@ public class BadOrderedRailcarService {
 	
 	@Autowired
 	private InboundRailcarRepository inboundRailcarRepository;
-
-//	@Autowired
-//	private InboundRailcarRepository inboundRailcarRepository;
-//	
-//	@Autowired
-//	private InboundRailcar inboundRailcar;
+	
 
 	public BadOrderedRailcar createBadOrder(BadOrderedRailcar badOrderedRailcar) {
 		return badOrderedRailcarRepository.save(badOrderedRailcar);
@@ -39,6 +34,7 @@ public class BadOrderedRailcarService {
 	}
 	
 	public List<BadOrderedRailcar> getActiveBadOrders(boolean isActive) {
+		//returns a list of bad order railcars that have not been assigned a repair date
 		List<BadOrderedRailcar> activeBadOrders = badOrderedRailcarRepository.findByIsActive(isActive);
 		return (List<BadOrderedRailcar>) activeBadOrders;
 	}
@@ -96,6 +92,9 @@ public class BadOrderedRailcarService {
         // Update related fields in InboundRailcar
         inboundRailcar.setCarMark(badOrderedRailcarDetails.getCarMark());
         inboundRailcar.setCarNumber(badOrderedRailcarDetails.getCarNumber());
+        
+        //1to1 relation with bad order date to inspection date.. i will most likely change this
+        inboundRailcar.setInspectedDate(badOrderedRailcarDetails.getBadOrderDate());
    
 
         //Save both entities
@@ -114,7 +113,7 @@ public class BadOrderedRailcarService {
 			badOrderedRailcarRepository.delete(badOrder);
 			System.out.println("Service - BadOrderedRailcar with inboundId " + inboundId + " deleted.");
 		} else {
-			System.out.println("No BadOrderedRailcar found for inboundId " + inboundId);
+			System.out.println("No BadOrderedRailcar found for " + inboundId);
 		}
 	}
 
