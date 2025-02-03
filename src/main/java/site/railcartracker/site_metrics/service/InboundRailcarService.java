@@ -1,5 +1,6 @@
 package site.railcartracker.site_metrics.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -85,21 +86,38 @@ public class InboundRailcarService {
 		// Handle the bad order logic
 		if (updatedInboundRailcar.isBadOrdered()) {
 			BadOrderedRailcar existingBadOrder = badOrderedRailcarService.getBadOrderByInboundRailcarId(inboundId);
+			
+			
+			badOrderedRailcarService.updateBadOrderAndInboundRailcar(existingBadOrder.getBadOrderId(), existingBadOrder);
 
 			if (existingBadOrder != null) {
 				// Update existing bad order
+				existingBadOrder.setCarMark(updatedInboundRailcar.getCarMark());
+				existingBadOrder.setCarNumber(updatedInboundRailcar.getCarNumber());
+				existingBadOrder.setBadOrderDate(updatedInboundRailcar.getInspectedDate());
+
+				System.out.println("Bad order: " + existingBadOrder + " is updated");
+
+				// Update the BadOrderedRailcar in the service
 				badOrderedRailcarService.updateBadOrder(existingBadOrder.getBadOrderId(), existingBadOrder);
-			} else {
-				// Create new bad order
-				BadOrderedRailcar newBadOrder = new BadOrderedRailcar();
-				newBadOrder.setInboundRailcar(updatedInboundRailcar); // Set the relationship
-				newBadOrder.setCarMark(updatedInboundRailcar.getCarMark());
-				newBadOrder.setCarNumber(updatedInboundRailcar.getCarNumber());
-				newBadOrder.setBadOrderDate(updatedInboundRailcar.getInspectedDate());
-			}
+				
+			} //else {
+//				// Create new bad order
+//				BadOrderedRailcar newBadOrder = new BadOrderedRailcar();
+//				newBadOrder.setInboundRailcar(updatedInboundRailcar);
+//				newBadOrder.setCarMark(updatedInboundRailcar.getCarMark());
+//				newBadOrder.setCarNumber(updatedInboundRailcar.getCarNumber());
+//				newBadOrder.setBadOrderDate(updatedInboundRailcar.getInspectedDate());
+//				
+//				System.out.println("railcar " + newBadOrder + "created at " + LocalDateTime.now());
+//				
+//			}
 		} else {
 			// If no longer bad ordered, delete the associated BadOrderedRailcar
 			badOrderedRailcarService.deleteBadOrderByInboundId(inboundId);
+			
+			System.out.println("Inbound Service - deleted bad order, inbound inspection record no longer associated with a bad order.");
+			
 		}
 
 		return updatedInboundRailcar;

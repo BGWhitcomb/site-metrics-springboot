@@ -39,7 +39,7 @@ public class InboundRailcar {
 
 	
 	
-	public int getInboundId() {
+	public Integer getInboundId() {
 		return inboundId;
 	}
 
@@ -55,7 +55,7 @@ public class InboundRailcar {
 		this.carMark = carMark;
 	}
 
-	public int getCarNumber() {
+	public Integer getCarNumber() {
 		return carNumber;
 	}
 

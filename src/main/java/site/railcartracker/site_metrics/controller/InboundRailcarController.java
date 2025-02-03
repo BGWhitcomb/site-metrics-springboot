@@ -56,9 +56,9 @@ public class InboundRailcarController {
 		return ResponseEntity.status(HttpStatus.OK).body(updatedInboundRailcar);
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteInboundRailcar(@PathVariable Integer id) {
-		inboundRailcarService.deleteInboundRailcar(id);
+	@DeleteMapping("/{inboundId}")
+	public ResponseEntity<Void> deleteInboundRailcar(@PathVariable Integer inboundId) {
+		inboundRailcarService.deleteInboundRailcar(inboundId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
 	}

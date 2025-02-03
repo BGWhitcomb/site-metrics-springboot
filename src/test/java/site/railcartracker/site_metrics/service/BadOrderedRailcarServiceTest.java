@@ -139,7 +139,7 @@ public class BadOrderedRailcarServiceTest {
 
 		// Assert
 		assertNotNull(updatedBadOrder);
-		assertEquals("XYZ", updatedBadOrder.getCarMark());
+		assertEquals("TSET", updatedBadOrder.getCarMark());
 		verify(badOrderedRailcarRepository, times(1)).findById(1);
 		verify(badOrderedRailcarRepository, times(1)).save(badOrderedRailcar);
 	}
@@ -151,7 +151,7 @@ public class BadOrderedRailcarServiceTest {
 		updatedBadOrderDetails.setCarMark("TEST");
 		updatedBadOrderDetails.setCarNumber(654321);
 		updatedBadOrderDetails.setBadOrderReason("Updated Reason");
-		updatedBadOrderDetails.setBadOrderDate(LocalDate.parse("2024-09-16"));
+		updatedBadOrderDetails.setBadOrderDate(badOrderDate);
 		updatedBadOrderDetails.setRepairedDate(LocalDate.parse("2024-09-18"));
 
 		// Mock the existing bad order and inbound railcar
@@ -168,7 +168,7 @@ public class BadOrderedRailcarServiceTest {
 		assertEquals("TEST", updatedBadOrder.getCarMark());
 		assertEquals(654321, updatedBadOrder.getCarNumber());
 		assertEquals("Updated Reason", updatedBadOrder.getBadOrderReason());
-		assertEquals("2024-09-16", updatedBadOrder.getBadOrderDate());
+		assertEquals(badOrderDate, updatedBadOrder.getBadOrderDate());
 
 		// Verify that the bad order and inbound railcar were updated and saved
 		verify(badOrderedRailcarRepository, times(1)).findById(1);
