@@ -51,7 +51,7 @@ public class InboundRailcarController {
 			@RequestBody InboundRailcar inboundRailcarDetails) {
 		// method for updating inbound railcar and also checking for bad order existence
 		// and updating simultaneously
-		InboundRailcar updatedInboundRailcar = inboundRailcarService.updateInboundRailcarAndBadOrder(inboundId,
+		InboundRailcar updatedInboundRailcar = inboundRailcarService.updateInboundRailcar(inboundId,
 				inboundRailcarDetails);
 		return ResponseEntity.status(HttpStatus.OK).body(updatedInboundRailcar);
 	}

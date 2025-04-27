@@ -99,7 +99,7 @@ public class InboundRailcarControllerTest {
 		updatedRailcar.setCarMark("TEST");
 		updatedRailcar.setCarNumber(654321);
 
-		when(inboundRailcarService.updateInboundRailcarAndBadOrder(1, updatedRailcar)).thenReturn(updatedRailcar);
+		when(inboundRailcarService.updateInboundRailcar(1, updatedRailcar)).thenReturn(updatedRailcar);
 
 		mockMvc.perform(put("/inspections/1").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(updatedRailcar))).andExpect(status().isOk())

@@ -121,36 +121,36 @@ public class InboundRailcarServiceTest {
         verify(inboundRailcarRepository, times(1)).findById(anyInt());
     }
 
-	@Test
-    public void testUpdateInboundRailcarAndBadOrder_CreateNewBadOrder() {
-        // Arrange
-        when(inboundRailcarRepository.findById(anyInt())).thenReturn(Optional.of(inboundRailcar));
-        when(inboundRailcarRepository.save(any(InboundRailcar.class))).thenReturn(inboundRailcar);
-        when(badOrderedRailcarService.getBadOrderByInboundRailcarId(anyInt())).thenReturn(null);
-        when(badOrderedRailcarService.createBadOrder(any(BadOrderedRailcar.class))).thenReturn(badOrderedRailcar);
-
-        // Act
-        InboundRailcar updatedRailcar = inboundRailcarService.updateInboundRailcarAndBadOrder(1, inboundRailcar);
-
-        // Assert
-        assertNotNull(updatedRailcar);
-        verify(badOrderedRailcarService, times(1)).createBadOrder(any(BadOrderedRailcar.class));
-    }
-
-	@Test
-    public void testUpdateInboundRailcarAndBadOrder_UpdateExistingBadOrder() {
-        // Arrange
-        when(inboundRailcarRepository.findById(anyInt())).thenReturn(Optional.of(inboundRailcar));
-        when(inboundRailcarRepository.save(any(InboundRailcar.class))).thenReturn(inboundRailcar);
-        when(badOrderedRailcarService.getBadOrderByInboundRailcarId(anyInt())).thenReturn(badOrderedRailcar);
-
-        // Act
-        InboundRailcar updatedRailcar = inboundRailcarService.updateInboundRailcarAndBadOrder(1, inboundRailcar);
-
-        // Assert
-        assertNotNull(updatedRailcar);
-        verify(badOrderedRailcarService, times(1)).updateBadOrder(anyInt(), any(BadOrderedRailcar.class));
-    }
+//	@Test
+//    public void testUpdateInboundRailcarAndBadOrder_CreateNewBadOrder() {
+//        // Arrange
+//        when(inboundRailcarRepository.findById(anyInt())).thenReturn(Optional.of(inboundRailcar));
+//        when(inboundRailcarRepository.save(any(InboundRailcar.class))).thenReturn(inboundRailcar);
+//        when(badOrderedRailcarService.getBadOrderByInboundRailcarId(anyInt())).thenReturn(null);
+//        when(badOrderedRailcarService.createBadOrder(any(BadOrderedRailcar.class))).thenReturn(badOrderedRailcar);
+//
+//        // Act
+//        InboundRailcar updatedRailcar = inboundRailcarService.updateInboundRailcarAndBadOrder(1, inboundRailcar);
+//
+//        // Assert
+//        assertNotNull(updatedRailcar);
+//        verify(badOrderedRailcarService, times(1)).createBadOrder(any(BadOrderedRailcar.class));
+//    }
+//
+//	@Test
+//    public void testUpdateInboundRailcarAndBadOrder_UpdateExistingBadOrder() {
+//        // Arrange
+//        when(inboundRailcarRepository.findById(anyInt())).thenReturn(Optional.of(inboundRailcar));
+//        when(inboundRailcarRepository.save(any(InboundRailcar.class))).thenReturn(inboundRailcar);
+//        when(badOrderedRailcarService.getBadOrderByInboundRailcarId(anyInt())).thenReturn(badOrderedRailcar);
+//
+//        // Act
+//        InboundRailcar updatedRailcar = inboundRailcarService.updateInboundRailcarAndBadOrder(1, inboundRailcar);
+//
+//        // Assert
+//        assertNotNull(updatedRailcar);
+//        verify(badOrderedRailcarService, times(1)).updateBadOrder(anyInt(), any(BadOrderedRailcar.class));
+//    }
 
 	@Test
     public void testDeleteInboundRailcar_WithBadOrder() {
