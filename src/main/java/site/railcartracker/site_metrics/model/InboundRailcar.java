@@ -36,9 +36,27 @@ public class InboundRailcar {
 	@OneToOne (mappedBy = "inboundRailcar", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	private BadOrderedRailcar badOrderedRailcar;
+	
+	
 
 	
 	
+	public InboundRailcar(Integer inboundId, String carMark, Integer carNumber, boolean isRepaired,
+			LocalDate inspectedDate, boolean isBadOrdered, BadOrderedRailcar badOrderedRailcar) {
+		super();
+		this.inboundId = inboundId;
+		this.carMark = carMark;
+		this.carNumber = carNumber;
+		this.isRepaired = isRepaired;
+		this.inspectedDate = inspectedDate;
+		this.isBadOrdered = isBadOrdered;
+		this.badOrderedRailcar = badOrderedRailcar;
+	}
+	
+	public InboundRailcar() {
+		
+	}
+
 	public Integer getInboundId() {
 		return inboundId;
 	}

@@ -24,8 +24,7 @@ public class BadOrderedRailcarController {
 	private BadOrderedRailcarService badOrderedRailcarService;
 
 	@GetMapping
-	public ResponseEntity<List<BadOrderedRailcar>> getActiveBadOrderedRailcars(
-			@RequestBody BadOrderedRailcar badOrderedRailcar, boolean isActive) {
+	public ResponseEntity<List<BadOrderedRailcar>> getActiveBadOrderedRailcars(BadOrderedRailcar badOrderedRailcar) {
 		// method for retrieving all active bad orders set to true, this is what will
 		// populate the table on page load
 		List<BadOrderedRailcar> activeBadOrders = badOrderedRailcarService
@@ -34,8 +33,7 @@ public class BadOrderedRailcarController {
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<List<BadOrderedRailcar>> getAllBadOrderedRailcars(
-			@RequestBody BadOrderedRailcar badOrderedRailcar) {
+	public ResponseEntity<List<BadOrderedRailcar>> getAllBadOrderedRailcars() {
 		// method for retrieving all bad orders
 		List<BadOrderedRailcar> allBadOrders = badOrderedRailcarService.getAllBadOrders();
 		return ResponseEntity.status(HttpStatus.OK).body(allBadOrders);
@@ -57,7 +55,7 @@ public class BadOrderedRailcarController {
 		return ResponseEntity.status(HttpStatus.OK).body(updatedBadOrder);
 
 	}
-
+// Change this plsssssssssss, i'll need to change this to search bo id.
 	@DeleteMapping("/{badOrderId}")
 	public ResponseEntity<Void> deleteBadOrderedRailcar(@PathVariable Integer badOrderId) {
 		// method for deleting bad order entries, will need to add logic to delete

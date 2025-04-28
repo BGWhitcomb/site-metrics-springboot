@@ -10,7 +10,7 @@ import site.railcartracker.site_metrics.model.BadOrderedRailcar;
 @Repository
 public interface BadOrderedRailcarRepository extends CrudRepository<BadOrderedRailcar, Integer> {
 	//placeholder for repo method ideas, need to figure out query methods
-	
+	//refactor this to use bo id
 	 BadOrderedRailcar findByInboundRailcar_InboundId(Integer inboundId);
 	 
 	 List<BadOrderedRailcar> findByIsActive(boolean isActive);

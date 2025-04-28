@@ -54,7 +54,6 @@ public class BadOrderedRailcar {
 	}
 
 	public BadOrderedRailcar() {
-		super();
 	}
 
 	public int getBadOrderId() {

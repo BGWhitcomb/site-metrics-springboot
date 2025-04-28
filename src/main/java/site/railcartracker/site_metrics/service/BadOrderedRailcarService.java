@@ -101,7 +101,7 @@ public class BadOrderedRailcarService {
         inboundRailcarRepository.save(inboundRailcar);
         return badOrderedRailcarRepository.save(existingBadOrder);
     }
-	
+//	change this to just delete by bo id..
 	@Transactional
 	public void deleteBadOrderByInboundId(Integer inboundId) {
 		// Find the bad order by the inbound railcar ID
