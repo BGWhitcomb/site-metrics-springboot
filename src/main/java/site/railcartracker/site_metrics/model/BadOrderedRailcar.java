@@ -6,20 +6,22 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Setter
-//@Getter
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Component
 // Handles logic of bad ordered inbound inspections; repairs that can't be performed that day
 public class BadOrderedRailcar {
@@ -30,30 +32,22 @@ public class BadOrderedRailcar {
 	private Integer carNumber;
 	private LocalDate badOrderDate; // Populated when user selects isBadOrdered true, inspectedDate becomes
 									// badOrderDate
-	private String badOrderReason; // Short user description on why the car is bad ordered
+	private String badOrderDescription; // Short user description on why the car is bad ordered
 	private LocalDate repairedDate; // Nullable, will remove from active bad order list when this date is populated,
-									// will still show in InboundRailcar table
+	// will still show in InboundRailcar table when true or false only used for bad
+	// orders;
+	@Builder.Default
 	private boolean isActive = true; // Checked for active status by repairedDate; if repairedDate is null, it is
 										// true
-	@OneToOne // there is only one bad order instance to one inspection instance ever
-	@JoinColumn(name = "inboundId", referencedColumnName = "inboundId", nullable = false) // Bad order can't exist without an instance of InboundRailcar
+
+	@OneToOne
+	@JoinColumn(name = "inbound_id", nullable = false)
 	@JsonBackReference
 	private InboundRailcar inboundRailcar;
 
-	public BadOrderedRailcar(Integer badOrderId, String carMark, Integer carNumber, LocalDate badOrderDate,
-			String badOrderReason, LocalDate repairedDate, boolean isActive, InboundRailcar inboundRailcar) {
-		super();
-		this.badOrderId = badOrderId;
-		this.carMark = carMark;
-		this.carNumber = carNumber;
-		this.badOrderDate = badOrderDate;
-		this.badOrderReason = badOrderReason;
-		this.repairedDate = repairedDate;
-		this.isActive = isActive;
-		this.inboundRailcar = inboundRailcar;
-	}
-
-	public BadOrderedRailcar() {
+	
+	public Integer getInboundId() {
+	    return inboundRailcar != null ? inboundRailcar.getInboundId() : null;
 	}
 
 	public int getBadOrderId() {
@@ -88,12 +82,12 @@ public class BadOrderedRailcar {
 		this.badOrderDate = badOrderDate;
 	}
 
-	public String getBadOrderReason() {
-		return badOrderReason;
+	public String getBadOrderDescription() {
+		return badOrderDescription;
 	}
 
-	public void setBadOrderReason(String badOrderReason) {
-		this.badOrderReason = badOrderReason;
+	public void setBadOrderDescription(String badOrderReason) {
+		this.badOrderDescription = badOrderReason;
 	}
 
 	public LocalDate getRepairedDate() {
@@ -118,13 +112,8 @@ public class BadOrderedRailcar {
 
 	public void setInboundRailcar(InboundRailcar inboundRailcar) {
 		this.inboundRailcar = inboundRailcar;
+		
 	}
 
-	@Override
-	public String toString() {
-		return "BadOrderedRailcar [badOrderId=" + badOrderId + ", carMark=" + carMark + ", carNumber=" + carNumber
-				+ ", badOrderDate=" + badOrderDate + ", badOrderReason=" + badOrderReason + ", repairedDate="
-				+ repairedDate + ", isActive=" + isActive + ", inboundRailcar=" + inboundRailcar + "]";
-	}
 
 }

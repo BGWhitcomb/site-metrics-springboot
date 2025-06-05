@@ -1,10 +1,12 @@
 package site.railcartracker.site_metrics.controller;
+import java.util.ArrayList;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,12 +26,25 @@ public class InboundRailcarController {
 	@Autowired
 	private InboundRailcarService inboundRailcarService;
 
-	@PostMapping
-	public ResponseEntity<InboundRailcar> createInboundRailcar(@RequestBody InboundRailcar inboundRailcar) {
-		InboundRailcar createdInboundRailcar = inboundRailcarService.createInboundRailcar(inboundRailcar);
+//	@PostMapping
+//	public ResponseEntity<InboundRailcar> createInboundRailcar(@RequestBody InboundRailcar inboundRailcar) {
+//		InboundRailcar createdInboundRailcar = inboundRailcarService.createInboundRailcar(inboundRailcar);
+//
+//		// Return the response with the created InboundRailcar
+//		return ResponseEntity.status(HttpStatus.CREATED).body(createdInboundRailcar);
+//	}
 
-		// Return the response with the created InboundRailcar
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdInboundRailcar);
+	@PostMapping
+	public ResponseEntity<List<InboundRailcar>> createMultipleInboundRailcars(
+			@RequestBody List<InboundRailcar> inboundRailcars) {
+		List<InboundRailcar> createdRailcars = new ArrayList<>();
+
+		for (InboundRailcar railcar : inboundRailcars) {
+			InboundRailcar createdRailcar = inboundRailcarService.createInboundRailcar(railcar);
+			createdRailcars.add(createdRailcar);
+		}
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdRailcars);
 	}
 
 	@GetMapping

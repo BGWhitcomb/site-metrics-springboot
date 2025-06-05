@@ -58,7 +58,7 @@ public class BadOrderedRailcarService {
 			existingBadOrder.setCarMark(badOrderedRailcarDetails.getCarMark());
 			existingBadOrder.setCarNumber(badOrderedRailcarDetails.getCarNumber());
 			existingBadOrder.setBadOrderDate(badOrderedRailcarDetails.getBadOrderDate());
-			existingBadOrder.setBadOrderReason(badOrderedRailcarDetails.getBadOrderReason());
+			existingBadOrder.setBadOrderDescription(badOrderedRailcarDetails.getBadOrderDescription());
 			existingBadOrder.setRepairedDate(badOrderedRailcarDetails.getRepairedDate());
 
 			// Save and return the updated BadOrderedRailcar
@@ -86,7 +86,7 @@ public class BadOrderedRailcarService {
         existingBadOrder.setCarMark(badOrderedRailcarDetails.getCarMark());
         existingBadOrder.setCarNumber(badOrderedRailcarDetails.getCarNumber());
         existingBadOrder.setBadOrderDate(badOrderedRailcarDetails.getBadOrderDate());
-        existingBadOrder.setBadOrderReason(badOrderedRailcarDetails.getBadOrderReason());
+        existingBadOrder.setBadOrderDescription(badOrderedRailcarDetails.getBadOrderDescription());
         existingBadOrder.setRepairedDate(badOrderedRailcarDetails.getRepairedDate());
 
         // Update related fields in InboundRailcar

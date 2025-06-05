@@ -2,14 +2,19 @@ package site.railcartracker.site_metrics.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import site.railcartracker.site_metrics.model.BadOrderedRailcar;
 import site.railcartracker.site_metrics.model.InboundRailcar;
 
 @Repository
 public interface InboundRailcarRepository extends CrudRepository<InboundRailcar, Integer> {
+	
+	// Use this if I need to find a bad order by inspected date?
+	Optional<BadOrderedRailcar> findByCarMarkAndCarNumberAndInspectedDate(String carMark, int carNumber, LocalDate inspectedDate);
 
 //	// Find all railcars inspected between two dates
 //	List<InboundRailcar> findByInspectedDateBetween(LocalDate startDate, LocalDate endDate);

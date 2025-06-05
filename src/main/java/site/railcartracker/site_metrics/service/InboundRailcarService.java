@@ -3,6 +3,7 @@ package site.railcartracker.site_metrics.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import site.railcartracker.site_metrics.model.BadOrderedRailcar;
 import site.railcartracker.site_metrics.model.InboundRailcar;
+import site.railcartracker.site_metrics.repository.BadOrderedRailcarRepository;
 import site.railcartracker.site_metrics.repository.InboundRailcarRepository;
 
 //service for comm between db and controller for abstraction
@@ -21,6 +23,9 @@ public class InboundRailcarService {
 
 	@Autowired
 	private BadOrderedRailcarService badOrderedRailcarService;
+
+	@Autowired
+	private BadOrderedRailcarRepository badOrderedRailcarRepository;
 
 	@Transactional
 	public InboundRailcar createInboundRailcar(InboundRailcar inboundRailcar) {
@@ -36,23 +41,23 @@ public class InboundRailcarService {
 		// Check if InboundRailcar is bad ordered and create the related
 		// BadOrderedRailcar
 		if (createdInboundRailcar.isBadOrdered()) {
-			BadOrderedRailcar badOrderedRailcar = new BadOrderedRailcar();
-
-			// Populate BadOrderedRailcar details from InboundRailcar
-			badOrderedRailcar.setInboundRailcar(createdInboundRailcar); // Set the relationship
-			badOrderedRailcar.setCarMark(createdInboundRailcar.getCarMark());
-			badOrderedRailcar.setCarNumber(createdInboundRailcar.getCarNumber());
-			
-			// 1to1 rel with badorder and inspected date, might change this later
-			badOrderedRailcar.setBadOrderDate(createdInboundRailcar.getInspectedDate());
-
-			// Save BadOrderedRailcar using its own service layer
-			BadOrderedRailcar createdBadOrder = badOrderedRailcarService.createBadOrder(badOrderedRailcar);
-
-			// Optionally set the created BadOrderedRailcar in the InboundRailcar
-			createdInboundRailcar.setBadOrderedRailcar(createdBadOrder);
+			Optional<BadOrderedRailcar> existing = badOrderedRailcarRepository.findByCarMarkAndCarNumberAndInboundRailcar_InboundId(
+					createdInboundRailcar.getCarMark(), createdInboundRailcar.getCarNumber(),
+					createdInboundRailcar.getInboundId());
+			if (existing.isPresent()) {
+				// Optionally link the existing bad order to the inbound railcar
+				createdInboundRailcar.setBadOrderedRailcar(existing.get());
+			} else {
+				// Create and save new BadOrderedRailcar
+				BadOrderedRailcar badOrderedRailcar = new BadOrderedRailcar();
+				badOrderedRailcar.setInboundRailcar(createdInboundRailcar);
+				badOrderedRailcar.setCarMark(createdInboundRailcar.getCarMark());
+				badOrderedRailcar.setCarNumber(createdInboundRailcar.getCarNumber());
+				badOrderedRailcar.setBadOrderDate(createdInboundRailcar.getInspectedDate());
+				badOrderedRailcar = badOrderedRailcarService.createBadOrder(badOrderedRailcar);
+				createdInboundRailcar.setBadOrderedRailcar(badOrderedRailcar);
+			}
 		}
-
 		return createdInboundRailcar;
 	}
 
@@ -65,7 +70,7 @@ public class InboundRailcarService {
 		return inboundRailcarRepository.findById(inboundId).orElse(null);
 
 	}
-	
+
 	@Transactional
 	public InboundRailcar updateInboundRailcar(Integer inboundId, InboundRailcar inboundRailcarDetails) {
 		InboundRailcar inboundRailcar = getInboundRailcarById(inboundId);
@@ -73,13 +78,13 @@ public class InboundRailcarService {
 		inboundRailcar.setCarNumber(inboundRailcarDetails.getCarNumber());
 		inboundRailcar.setRepaired(inboundRailcarDetails.isRepaired());
 		inboundRailcar.setInspectedDate(inboundRailcarDetails.getInspectedDate());
+		inboundRailcar.setEmpty(inboundRailcarDetails.isEmpty());
 		inboundRailcar.setBadOrdered(inboundRailcarDetails.isBadOrdered());
 		return inboundRailcarRepository.save(inboundRailcar);
 
 	}
 
-	
-	//might use later, need to debug to update inbound
+	// might use later, need to debug to update inbound
 //	@Transactional
 //	public InboundRailcar updateInboundRailcarAndBadOrder(Integer inboundId, InboundRailcar inboundRailcarDetails) {
 //		// Update InboundRailcar
@@ -128,7 +133,7 @@ public class InboundRailcarService {
 	@Transactional
 	public void deleteInboundRailcar(Integer inboundId) {
 		InboundRailcar inboundRailcar = getInboundRailcarById(inboundId);
-		
+
 		if (inboundRailcar != null) {
 			inboundRailcarRepository.delete(inboundRailcar);
 			System.out.println(inboundRailcar + " has been deleted.");
@@ -138,7 +143,7 @@ public class InboundRailcarService {
 			badOrderedRailcarService.deleteBadOrderByInboundId(inboundId);
 			System.out.println(existingBadOrder + " with inboundId " + inboundId + " deleted.");
 		} else {
-			
+
 			System.out.println(" No Bad Ordered Railcars assigned to " + inboundId);
 		}
 	}

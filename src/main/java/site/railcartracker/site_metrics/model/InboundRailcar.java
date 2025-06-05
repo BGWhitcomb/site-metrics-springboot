@@ -1,67 +1,54 @@
 package site.railcartracker.site_metrics.model;
 
 import java.time.LocalDate;
-
 import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Setter
-//@Getter
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Component
 // Handles logic of inbound inspection of railcars
 public class InboundRailcar {
 	@Id
+	@Column(name = "inbound_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer inboundId; // Primary key, auto-incremented
+
 	private String carMark;
 	private Integer carNumber;
-	private boolean isRepaired; // Running repair performed on inspection, not related to the bad order model
+	@Builder.Default // false unless checkbox is checked in front end inspection form
+	private boolean isRepaired = false; // Running repair performed on inspection, not related to the bad order model
 	private LocalDate inspectedDate;
+	@Builder.Default
+	private boolean isEmpty = true; // Empty or loaded railcar at the time of inspection, most of the time they are
+									// empty
+	private String repairDescription;
+	@Builder.Default
 	private boolean isBadOrdered = false; // If true, triggers creation of BadOrderedRailcar, using 1:1 relation with
 											// foreign key
-	@OneToOne (mappedBy = "inboundRailcar", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "inboundRailcar", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	private BadOrderedRailcar badOrderedRailcar;
-	
-	
-
-	
-	
-	public InboundRailcar(Integer inboundId, String carMark, Integer carNumber, boolean isRepaired,
-			LocalDate inspectedDate, boolean isBadOrdered, BadOrderedRailcar badOrderedRailcar) {
-		super();
-		this.inboundId = inboundId;
-		this.carMark = carMark;
-		this.carNumber = carNumber;
-		this.isRepaired = isRepaired;
-		this.inspectedDate = inspectedDate;
-		this.isBadOrdered = isBadOrdered;
-		this.badOrderedRailcar = badOrderedRailcar;
-	}
-	
-	public InboundRailcar() {
-		
-	}
 
 	public Integer getInboundId() {
 		return inboundId;
 	}
 
-	public void setInboundId(int inboundId) {
+	public void setInboundId(Integer inboundId) {
 		this.inboundId = inboundId;
 	}
 
@@ -77,7 +64,7 @@ public class InboundRailcar {
 		return carNumber;
 	}
 
-	public void setCarNumber(int carNumber) {
+	public void setCarNumber(Integer carNumber) {
 		this.carNumber = carNumber;
 	}
 
@@ -112,7 +99,29 @@ public class InboundRailcar {
 	public void setBadOrderedRailcar(BadOrderedRailcar badOrderedRailcar) {
 		this.badOrderedRailcar = badOrderedRailcar;
 	}
-	
-	
+
+	public boolean isEmpty() {
+		return isEmpty;
+	}
+
+	public void setEmpty(boolean isEmpty) {
+		this.isEmpty = isEmpty;
+	}
+
+	public String getRepairDescription() {
+		return repairDescription;
+	}
+
+	public void setRepairDescription(String repairDescription) {
+		this.repairDescription = repairDescription;
+	}
+
+	@Override
+	public String toString() {
+		return "InboundRailcar [inboundId=" + inboundId + ", carMark=" + carMark + ", carNumber=" + carNumber
+				+ ", isRepaired=" + isRepaired + ", inspectedDate=" + inspectedDate + ", isEmpty=" + isEmpty
+				+ ", repairDescription=" + repairDescription + ", isBadOrdered=" + isBadOrdered + ", badOrderedRailcar="
+				+ badOrderedRailcar + "]";
+	}
 
 }

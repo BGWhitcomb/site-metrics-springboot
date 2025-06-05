@@ -54,7 +54,7 @@ public class BadOrderedRailcarServiceTest {
 		badOrderedRailcar.setCarMark("TEST");
 		badOrderedRailcar.setCarNumber(123456);
 		badOrderedRailcar.setBadOrderDate(badOrderDate);
-		badOrderedRailcar.setBadOrderReason("Brake Issue");
+		badOrderedRailcar.setBadOrderDescription("Brake Issue");
 
 		inboundRailcar = new InboundRailcar();
 		inboundRailcar.setInboundId(1);
@@ -129,7 +129,7 @@ public class BadOrderedRailcarServiceTest {
 		BadOrderedRailcar updatedDetails = new BadOrderedRailcar();
 		updatedDetails.setCarMark("TSET");
 		updatedDetails.setCarNumber(654321);
-		updatedDetails.setBadOrderReason("Wheel Issue");
+		updatedDetails.setBadOrderDescription("Wheel Issue");
 
 		when(badOrderedRailcarRepository.findById(1)).thenReturn(Optional.of(badOrderedRailcar));
 		when(badOrderedRailcarRepository.save(badOrderedRailcar)).thenReturn(badOrderedRailcar);
@@ -150,7 +150,7 @@ public class BadOrderedRailcarServiceTest {
 		BadOrderedRailcar updatedBadOrderDetails = new BadOrderedRailcar();
 		updatedBadOrderDetails.setCarMark("TEST");
 		updatedBadOrderDetails.setCarNumber(654321);
-		updatedBadOrderDetails.setBadOrderReason("Updated Reason");
+		updatedBadOrderDetails.setBadOrderDescription("Updated Reason");
 		updatedBadOrderDetails.setBadOrderDate(badOrderDate);
 		updatedBadOrderDetails.setRepairedDate(LocalDate.parse("2024-09-18"));
 
@@ -167,7 +167,7 @@ public class BadOrderedRailcarServiceTest {
 		assertNotNull(updatedBadOrder);
 		assertEquals("TEST", updatedBadOrder.getCarMark());
 		assertEquals(654321, updatedBadOrder.getCarNumber());
-		assertEquals("Updated Reason", updatedBadOrder.getBadOrderReason());
+		assertEquals("Updated Reason", updatedBadOrder.getBadOrderDescription());
 		assertEquals(badOrderDate, updatedBadOrder.getBadOrderDate());
 
 		// Verify that the bad order and inbound railcar were updated and saved
