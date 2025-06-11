@@ -16,7 +16,7 @@ public interface BadOrderedRailcarRepository extends CrudRepository<BadOrderedRa
 	BadOrderedRailcar findByInboundRailcar_InboundId(Integer inboundId);
 
 	Optional<BadOrderedRailcar> findByCarMarkAndCarNumberAndInboundRailcar_InboundId(String carMark, Integer carNumber,
-			Integer inboundId);
+			Long inboundId);
 
 	List<BadOrderedRailcar> findByIsActive(boolean isActive);
 

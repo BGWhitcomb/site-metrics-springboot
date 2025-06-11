@@ -50,14 +50,14 @@ public class BadOrderedRailcarServiceTest {
 
 		// Initialize test data
 		badOrderedRailcar = new BadOrderedRailcar();
-		badOrderedRailcar.setBadOrderId(1);
+		badOrderedRailcar.setBadOrderId((long) 1);
 		badOrderedRailcar.setCarMark("TEST");
 		badOrderedRailcar.setCarNumber(123456);
 		badOrderedRailcar.setBadOrderDate(badOrderDate);
 		badOrderedRailcar.setBadOrderDescription("Brake Issue");
 
 		inboundRailcar = new InboundRailcar();
-		inboundRailcar.setInboundId(1);
+		inboundRailcar.setInboundId((long) 1);
 		inboundRailcar.setCarMark("TEST");
 		inboundRailcar.setCarNumber(123456);
 		badOrderedRailcar.setInboundRailcar(inboundRailcar);

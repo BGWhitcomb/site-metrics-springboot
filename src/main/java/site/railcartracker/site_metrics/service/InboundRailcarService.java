@@ -44,9 +44,11 @@ public class InboundRailcarService {
 			Optional<BadOrderedRailcar> existing = badOrderedRailcarRepository.findByCarMarkAndCarNumberAndInboundRailcar_InboundId(
 					createdInboundRailcar.getCarMark(), createdInboundRailcar.getCarNumber(),
 					createdInboundRailcar.getInboundId());
+					System.out.println("Finding Existing Bad Order");
 			if (existing.isPresent()) {
 				// Optionally link the existing bad order to the inbound railcar
 				createdInboundRailcar.setBadOrderedRailcar(existing.get());
+				System.out.println("Existing bad order, Railcars have been linked.");
 			} else {
 				// Create and save new BadOrderedRailcar
 				BadOrderedRailcar badOrderedRailcar = new BadOrderedRailcar();
@@ -56,6 +58,7 @@ public class InboundRailcarService {
 				badOrderedRailcar.setBadOrderDate(createdInboundRailcar.getInspectedDate());
 				badOrderedRailcar = badOrderedRailcarService.createBadOrder(badOrderedRailcar);
 				createdInboundRailcar.setBadOrderedRailcar(badOrderedRailcar);
+				System.out.println("No Existing Bad Order Found Created Bad Order");
 			}
 		}
 		return createdInboundRailcar;
@@ -81,6 +84,8 @@ public class InboundRailcarService {
 		inboundRailcar.setEmpty(inboundRailcarDetails.isEmpty());
 		inboundRailcar.setBadOrdered(inboundRailcarDetails.isBadOrdered());
 		return inboundRailcarRepository.save(inboundRailcar);
+		
+		// add logic for updating both models?
 
 	}
 

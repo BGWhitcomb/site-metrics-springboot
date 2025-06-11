@@ -60,6 +60,8 @@ public class BadOrderedRailcarService {
 			existingBadOrder.setBadOrderDate(badOrderedRailcarDetails.getBadOrderDate());
 			existingBadOrder.setBadOrderDescription(badOrderedRailcarDetails.getBadOrderDescription());
 			existingBadOrder.setRepairedDate(badOrderedRailcarDetails.getRepairedDate());
+			
+			//repair date population makes isActive = false, used for filtering in the front end for active bad order tracking
 
 			// Save and return the updated BadOrderedRailcar
 			return badOrderedRailcarRepository.save(existingBadOrder);

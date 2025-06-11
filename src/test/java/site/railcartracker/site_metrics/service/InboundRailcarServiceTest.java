@@ -48,7 +48,7 @@ public class InboundRailcarServiceTest {
 
 		// Create mock InboundRailcar
 		inboundRailcar = new InboundRailcar();
-		inboundRailcar.setInboundId(1);
+		inboundRailcar.setInboundId((long) 1);
 		inboundRailcar.setCarMark("TEST");
 		inboundRailcar.setCarNumber(123456);
 		inboundRailcar.setInspectedDate(LocalDate.now());
@@ -56,7 +56,7 @@ public class InboundRailcarServiceTest {
 
 		// Create mock BadOrderedRailcar
 		badOrderedRailcar = new BadOrderedRailcar();
-		badOrderedRailcar.setBadOrderId(1);
+		badOrderedRailcar.setBadOrderId((long) 1);
 		badOrderedRailcar.setCarMark("TEST");
 		badOrderedRailcar.setCarNumber(123456);
 		badOrderedRailcar.setBadOrderDate(LocalDate.now());

@@ -3,6 +3,8 @@ package site.railcartracker.site_metrics.model;
 import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,17 +28,22 @@ public class InboundRailcar {
 	@Id
 	@Column(name = "inbound_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer inboundId; // Primary key, auto-incremented
+	private Long inboundId; // Primary key, auto-incremented
 
 	private String carMark;
 	private Integer carNumber;
+	
+	@JsonProperty("isRepaired") // remove is prefix for front end logic // need to change back to is prefix for consistency??
 	@Builder.Default // false unless checkbox is checked in front end inspection form
 	private boolean isRepaired = false; // Running repair performed on inspection, not related to the bad order model
 	private LocalDate inspectedDate;
+	
+	@JsonProperty("isEmpty") // is prefix for front end data
 	@Builder.Default
 	private boolean isEmpty = true; // Empty or loaded railcar at the time of inspection, most of the time they are
 									// empty
 	private String repairDescription;
+	
 	@Builder.Default
 	private boolean isBadOrdered = false; // If true, triggers creation of BadOrderedRailcar, using 1:1 relation with
 											// foreign key
@@ -44,11 +51,11 @@ public class InboundRailcar {
 	@JsonManagedReference
 	private BadOrderedRailcar badOrderedRailcar;
 
-	public Integer getInboundId() {
+	public Long getInboundId() {
 		return inboundId;
 	}
 
-	public void setInboundId(Integer inboundId) {
+	public void setInboundId(Long inboundId) {
 		this.inboundId = inboundId;
 	}
 
