@@ -41,10 +41,10 @@ public class InboundRailcarService {
 		// Check if InboundRailcar is bad ordered and create the related
 		// BadOrderedRailcar
 		if (createdInboundRailcar.isBadOrdered()) {
-			Optional<BadOrderedRailcar> existing = badOrderedRailcarRepository.findByCarMarkAndCarNumberAndInboundRailcar_InboundId(
-					createdInboundRailcar.getCarMark(), createdInboundRailcar.getCarNumber(),
-					createdInboundRailcar.getInboundId());
-					System.out.println("Finding Existing Bad Order");
+			Optional<BadOrderedRailcar> existing = badOrderedRailcarRepository
+					.findByCarMarkAndCarNumberAndInboundRailcar_InboundId(createdInboundRailcar.getCarMark(),
+							createdInboundRailcar.getCarNumber(), createdInboundRailcar.getInboundId());
+			System.out.println("Finding Existing Bad Order");
 			if (existing.isPresent()) {
 				// Optionally link the existing bad order to the inbound railcar
 				createdInboundRailcar.setBadOrderedRailcar(existing.get());
@@ -84,7 +84,7 @@ public class InboundRailcarService {
 		inboundRailcar.setEmpty(inboundRailcarDetails.isEmpty());
 		inboundRailcar.setBadOrdered(inboundRailcarDetails.isBadOrdered());
 		return inboundRailcarRepository.save(inboundRailcar);
-		
+
 		// add logic for updating both models?
 
 	}
@@ -150,6 +150,13 @@ public class InboundRailcarService {
 		} else {
 
 			System.out.println(" No Bad Ordered Railcars assigned to " + inboundId);
+		}
+	}
+
+	@Transactional
+	public void deleteInboundRailcars(List<Integer> inboundIds) {
+		for (Integer id : inboundIds) {
+			deleteInboundRailcar(id);
 		}
 	}
 

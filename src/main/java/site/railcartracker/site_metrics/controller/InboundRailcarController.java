@@ -71,11 +71,10 @@ public class InboundRailcarController {
 		return ResponseEntity.status(HttpStatus.OK).body(updatedInboundRailcar);
 	}
 
-	@DeleteMapping("/{inboundId}")
-	public ResponseEntity<Void> deleteInboundRailcar(@PathVariable Integer inboundId) {
-		inboundRailcarService.deleteInboundRailcar(inboundId);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+	@DeleteMapping
+	public ResponseEntity<Void> deleteInboundRailcars(@RequestBody List<Integer> inboundIds) {
+	    inboundRailcarService.deleteInboundRailcars(inboundIds);
+	    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 //	@GetMapping("/date-range")
