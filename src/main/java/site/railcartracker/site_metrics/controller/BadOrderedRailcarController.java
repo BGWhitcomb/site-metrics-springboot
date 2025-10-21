@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,19 +24,15 @@ public class BadOrderedRailcarController {
 	private BadOrderedRailcarService badOrderedRailcarService;
 
 	@GetMapping
-	public ResponseEntity<List<BadOrderedRailcar>> getActiveBadOrderedRailcars(BadOrderedRailcar badOrderedRailcar) {
-		// method for retrieving all active bad orders set to true, this is what will
-		// populate the table on page load
-		List<BadOrderedRailcar> activeBadOrders = badOrderedRailcarService
-				.getActiveBadOrders(badOrderedRailcar.isActive());
-		return ResponseEntity.status(HttpStatus.OK).body(activeBadOrders);
-	}
-
-	@GetMapping("/all")
-	public ResponseEntity<List<BadOrderedRailcar>> getAllBadOrderedRailcars() {
-		// method for retrieving all bad orders
-		List<BadOrderedRailcar> allBadOrders = badOrderedRailcarService.getAllBadOrders();
-		return ResponseEntity.status(HttpStatus.OK).body(allBadOrders);
+	public ResponseEntity<List<BadOrderedRailcar>> getBadOrderedRailcars(
+			@org.springframework.web.bind.annotation.RequestParam(value = "ref", required = false) String ref) {
+		List<BadOrderedRailcar> badOrders;
+		if ("isActive".equalsIgnoreCase(ref)) {
+			badOrders = badOrderedRailcarService.getActiveBadOrders(true);
+		} else {
+			badOrders = badOrderedRailcarService.getAllBadOrders();
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(badOrders);
 	}
 
 	@GetMapping("/{badOrderId}")
@@ -56,7 +51,7 @@ public class BadOrderedRailcarController {
 		return ResponseEntity.status(HttpStatus.OK).body(updatedBadOrder);
 
 	}
-// Change this plsssssssssss, i'll need to change this to search bo id.
+
 	@DeleteMapping("/{badOrderId}")
 	public ResponseEntity<Void> deleteBadOrderedRailcar(@PathVariable Integer badOrderId) {
 		// method for deleting bad order entries, will need to add logic to delete
@@ -64,25 +59,4 @@ public class BadOrderedRailcarController {
 		badOrderedRailcarService.deleteBadOrderByInboundId(badOrderId);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
-
-//	@GetMapping("/date-range")
-//	public ResponseEntity<List<InboundRailcar>> getInspectionsByDateRange(@RequestParam LocalDate startDate,
-//			@RequestParam LocalDate endDate) {
-//		// method for retrieving inspections by date range
-//	}
-
-//	@GetMapping("/car/{carNumber}")
-//	public ResponseEntity<BadOrderedRailcar> getBadOrderByCarNumber(@PathVariable int carNumber) {
-//		return null;
-//		// method for car number search, returns all matching car numbers in the
-//		// database...add car mark too?
-//	}
-//
-//	@GetMapping("/car/{repairedDate}")
-//	public ResponseEntity<InboundRailcar> getBadOrderByDate(@PathVariable LocalDate repairedDate) {
-//		return null;
-//		//method for repair date search
-//
-//	}
-
 }
