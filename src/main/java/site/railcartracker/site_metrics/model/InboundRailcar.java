@@ -16,7 +16,6 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Builder
@@ -33,12 +32,12 @@ public class InboundRailcar {
 	private String carMark;
 	private Integer carNumber;
 	
-	@JsonProperty("isRepaired") // remove is prefix for front end logic // need to change back to is prefix for consistency??
-	@Builder.Default // false unless checkbox is checked in front end inspection form
+	@JsonProperty("isRepaired")
+	@Builder.Default // defaults to false unless user specifies in front end components
 	private boolean isRepaired = false; // Running repair performed on inspection, not related to the bad order model
 	private LocalDate inspectedDate;
 	
-	@JsonProperty("isEmpty") // is prefix for front end data
+	@JsonProperty("isEmpty")
 	@Builder.Default
 	private boolean isEmpty = true; // Empty or loaded railcar at the time of inspection, most of the time they are
 									// empty
@@ -50,6 +49,8 @@ public class InboundRailcar {
 	@OneToOne(mappedBy = "inboundRailcar", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	private BadOrderedRailcar badOrderedRailcar;
+
+	// Getters and Setters
 
 	public Long getInboundId() {
 		return inboundId;
